@@ -7,10 +7,13 @@ dotenv.config();
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
-  await page.goto('https://www.starmarket.com/foru-guest.html');
-
-  // Set screen size
+  // Set browser info
+  page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
+  );
   await page.setViewport({ width: 1600, height: 900 });
+
+  await page.goto('https://www.starmarket.com/foru-guest.html');
 
   // Open sidebar
   const profileSelector = '.menu-nav__profile-button';
@@ -43,4 +46,17 @@ dotenv.config();
   // console.log('The title of this blog post is "%s".', fullTitle);
 
   // await browser.close();
+
+  console.log(
+    `%c ________________________________________
+       ,O,
+      ,OOO,
+'oooooOOOOOooooo'
+  OOOOOOOOOOO
+     OOOOOOO
+    OOOO'OOOO
+   OOO'   'OOO
+  O'         'O`,
+    'font-family:monospace'
+  );
 })();
