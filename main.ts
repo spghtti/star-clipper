@@ -52,7 +52,9 @@ dotenv.config();
        ,O,
       ,OOO,
 'oooooOOOOOooooo'
-  OOOOOOOOOOO
+   OOOOOOOOOOO
+     Coupons
+    redeemed!
      OOOOOOO
     OOOO'OOOO
    OOO'   'OOO
