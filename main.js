@@ -16,6 +16,15 @@ const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 const account_json_1 = __importDefault(require("./account.json"));
 const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    const isElementVisible = (page, cssSelector) => __awaiter(void 0, void 0, void 0, function* () {
+        let visible = true;
+        yield page
+            .waitForSelector(cssSelector, { visible: true, timeout: 10000 })
+            .catch(() => {
+            visible = false;
+        });
+        return visible;
+    });
     puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
     const browser = yield puppeteer_extra_1.default.launch({ headless: false });
     const page = yield browser.newPage();
@@ -41,22 +50,35 @@ const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extr
     const signInSelector = '#btnSignIn';
     yield page.waitForSelector(signInSelector);
     yield page.click(signInSelector);
+    // Continually load pages until all coupons are shown
+    const loadMoreButtonSelector = '.load-more';
+    let loadMoreVisible = yield page.waitForSelector(loadMoreButtonSelector, {
+        visible: true,
+        timeout: 0,
+    });
+    while (loadMoreVisible) {
+        yield page.click(loadMoreButtonSelector).catch(() => { });
+        try {
+            loadMoreVisible = yield page.waitForSelector(loadMoreButtonSelector, {
+                visible: true,
+                timeout: 5000,
+            });
+        }
+        catch (err) {
+            loadMoreVisible = null;
+        }
+    }
+    // Click all redeem buttons
     yield page.waitForSelector('.grid-coupon-btn');
     const redeemButtons = yield page.$$('.grid-coupon-btn');
-    for (let button of redeemButtons)
-        yield button.click();
-    // let loadMoreButtonSelector = '.load-more';
-    // await page.waitForSelector(loadMoreButtonSelector, { timeout: 0 });
-    // await page.click(loadMoreButtonSelector);
-    // Locate the full title with a unique string
-    // const textSelector = await page.waitForSelector(
-    //   'text/Customize and automate'
-    // );
-    // const fullTitle = await textSelector?.evaluate((el) => el.textContent);
-    // Print the full title
-    // console.log('The title of this blog post is "%s".', fullTitle);
-    // await browser.close();
+    (() => __awaiter(void 0, void 0, void 0, function* () {
+        for (let button of redeemButtons)
+            yield button.click();
+        return Promise.resolve();
+    }))();
+    yield browser.close();
     console.log(`%c
+          .
          ,O,
         ,OOO,
   'oooooOOOOOooooo'

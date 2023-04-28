@@ -1,6 +1,8 @@
 # Only in here for testing
 account.json
 
+.vscode
+
 # Logs
 logs
 *.log

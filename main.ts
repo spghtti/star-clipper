@@ -1,7 +1,19 @@
 import puppeteer from 'puppeteer-extra';
 import account from './account.json';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { Page } from 'puppeteer';
+
 (async () => {
+  const isElementVisible = async (page: Page, cssSelector: string) => {
+    let visible = true;
+    await page
+      .waitForSelector(cssSelector, { visible: true, timeout: 10000 })
+      .catch(() => {
+        visible = false;
+      });
+    return visible;
+  };
+
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
@@ -37,28 +49,39 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
   await page.waitForSelector(signInSelector);
   await page.click(signInSelector);
 
+  // Continually load pages until all coupons are shown
+  const loadMoreButtonSelector = '.load-more';
+  let loadMoreVisible = await page.waitForSelector(loadMoreButtonSelector, {
+    visible: true,
+    timeout: 0,
+  });
+
+  while (loadMoreVisible) {
+    await page.click(loadMoreButtonSelector).catch(() => {});
+    try {
+      loadMoreVisible = await page.waitForSelector(loadMoreButtonSelector, {
+        visible: true,
+        timeout: 5000,
+      });
+    } catch (err) {
+      loadMoreVisible = null;
+    }
+  }
+
+  // Click all redeem buttons
   await page.waitForSelector('.grid-coupon-btn');
   const redeemButtons = await page.$$('.grid-coupon-btn');
 
-  for (let button of redeemButtons) await button.click();
+  (async () => {
+    for (let button of redeemButtons) await button.click();
+    return Promise.resolve();
+  })();
 
-  // let loadMoreButtonSelector = '.load-more';
-  // await page.waitForSelector(loadMoreButtonSelector, { timeout: 0 });
-  // await page.click(loadMoreButtonSelector);
-
-  // Locate the full title with a unique string
-  // const textSelector = await page.waitForSelector(
-  //   'text/Customize and automate'
-  // );
-  // const fullTitle = await textSelector?.evaluate((el) => el.textContent);
-
-  // Print the full title
-  // console.log('The title of this blog post is "%s".', fullTitle);
-
-  // await browser.close();
+  await browser.close();
 
   console.log(
     `%c
+          .
          ,O,
         ,OOO,
   'oooooOOOOOooooo'
