@@ -67,6 +67,7 @@ import { Page } from 'puppeteer';
     return Promise.resolve();
   })();
 
+  // Close browser
   await browser.close();
 
   console.log(

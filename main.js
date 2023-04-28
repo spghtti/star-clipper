@@ -67,6 +67,7 @@ const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extr
             yield button.click();
         return Promise.resolve();
     }))();
+    // Close browser
     yield browser.close();
     console.log(`%c
           .
