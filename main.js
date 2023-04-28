@@ -16,15 +16,6 @@ const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 const account_json_1 = __importDefault(require("./account.json"));
 const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const isElementVisible = (page, cssSelector) => __awaiter(void 0, void 0, void 0, function* () {
-        let visible = true;
-        yield page
-            .waitForSelector(cssSelector, { visible: true, timeout: 10000 })
-            .catch(() => {
-            visible = false;
-        });
-        return visible;
-    });
     puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
     const browser = yield puppeteer_extra_1.default.launch({ headless: false });
     const page = yield browser.newPage();

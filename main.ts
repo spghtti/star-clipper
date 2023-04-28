@@ -4,16 +4,6 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { Page } from 'puppeteer';
 
 (async () => {
-  const isElementVisible = async (page: Page, cssSelector: string) => {
-    let visible = true;
-    await page
-      .waitForSelector(cssSelector, { visible: true, timeout: 10000 })
-      .catch(() => {
-        visible = false;
-      });
-    return visible;
-  };
-
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
