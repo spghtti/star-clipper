@@ -11,12 +11,15 @@ This program automatically redeems all the coupons on Star Market's site provide
 
 ## Run locally
 
-Before you run the program, you must add your Star Market account info into account.json. Then, start the program by doing the following.
-
 ```
 git clone https://github.com/spghtti/star-clipper.git
 cd star-clipper
 yarn install
+```
+
+Before you run the program, **you must add your Star Market account info to account.json**. Then, run the following:
+
+```
 yarn start
 ```
 
